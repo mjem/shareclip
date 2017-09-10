@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Server info</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{app.router.static.url(filename='bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{app.router.static.url(filename='shareclip.css')}}">
+	</head>
+	<body>
+		<div class="container">
+			<h1>Share clipboard info</h1>
+
+			<h2>Program</h2>
+			<p>Homepage: {{homepage}}</p>
+			<p>Version: {{version}}</p>
+
+			<h2>Clients</h2>
+			<ul>
+				{%for c in clients%}<li>{{c}}</li>{%endfor%}
+			</ul>
+
+			<h2>State</h2>
+			<p>{{messages}} messages</p>
+			<p>{{undos}} in undo queue</p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,40 @@
+body {
+	/* margin: 2rem 0 0 2rem; */
+}
+
+.error {
+	/* color: #ff0000; */
+}
+
+.btn {
+	cursor: pointer;
+}
+
+div.container {
+	margin: 2rem;
+	padding-left: 0;
+	/* border: 1px black solid; */
+}
+
+div.form-group {
+	margin-left: 0;
+	padding-bottom: 1rem;
+	/* border: 1px black solid; */
+}
+
+h1 {
+	padding-bottom: 1rem;
+	padding-left: 0;
+	/* border: 1px black solid; */
+}
+
+table {
+	padding-left: 0;
+	/* border: 1px black solid; */
+}
+
+div.misc-buttons {
+	padding-top: 1rem;
+	mergin-left: 0;
+	/* border: 1px black solid; */
+}

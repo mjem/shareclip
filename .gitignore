@@ -1,0 +1,8 @@
+env
+activate
+shareclip.org
+thirdparty
+__pycache__
+dist
+shareclip.egg-info
+README.html

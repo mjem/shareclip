@@ -1,0 +1,9 @@
+pandoc
+docutils
+pylint
+pydocstyle
+pycodestyle
+emacs
+git
+linters
+aiohttp_debugtoolbar
