@@ -13,10 +13,11 @@ function get(url) {
 
 // websocket and message queue
 var ws;
-var ws_ready = false;
-var ws_outbox = []
+// var ws_ready = false;
+// var ws_outbox = []
 
 function create_websocket() {
+	// ws_ready = false;
 	if ('WebSocket' in window) {
 		console.log('Looking for ws at ' + ws_url);
 
@@ -29,10 +30,27 @@ function create_websocket() {
 
 		ws.onopen = function() {
 			// clear any buffered messages and mark the socket as available for direct use
-			ws_ready = true;
-			for(var i=0; i<ws_outbox.length; i++) {
-				websocket_send(ws_outbox[i]);
-			}
+			// ws_ready = true;
+			// for(var i=0; i<ws_outbox.length; i++) {
+				// websocket_send(ws_outbox[i]);
+			// }
+			// ws_outbox = [];
+			console.log('pre set table');
+			docid('slot-table-placeholder').innerHTML =
+				'<table class="table table-bordered table-hover table-sm" id="slot-table">' +
+				'<thead class="thead-default">' +
+				'<tr>' +
+				'<th>Message</th>' +
+				'<th>Sender</th>' +
+				'<th>Control</th>' +
+				'</tr>' +
+				'</thead>' +
+				'<tbody id="slots">' +
+				'</tbody>' +
+				'</table>';
+			console.log('post set table');
+
+			websocket_send({type: 'helo'});
 		};
 
 		ws.onmessage = function(event) {
@@ -40,8 +58,9 @@ function create_websocket() {
 		};
 
 		ws.onclose = function()	{
-			docid('slot-table').innerHTML = '<div class="alert alert-danger" role="alert">' +
+			docid('slot-table-placeholder').innerHTML = '<div class="alert alert-danger" role="alert">' +
 				'Connection to server lost' +
+				'<button class="btn" onclick="create_websocket()">Reconnect</button>' +
 				'</div>';
 			console.log('WebSocket is closed');
 		};
@@ -50,21 +69,19 @@ function create_websocket() {
 	else {
 		alert('WebSocket not supported by your browser');
     }
-
-	websocket_send({type: 'helo'});
 }
 
 // send a message back to our server over the websocket
 function websocket_send(message) {
-	if (ws_ready) {
+	// if (ws_ready) {
 		var encoded = JSON.stringify(message);
 		console.log('Sending message ' + encoded);
 		ws.send(encoded);
-	}
+	// }
 
-	else {
-		ws_outbox.push(message);
-	}
+	// else {
+		// ws_outbox.push(message);
+	// }
 }
 
 // right pad with `filler` to `length` chars

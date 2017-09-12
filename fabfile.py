@@ -68,27 +68,32 @@ def test():
 def lint():
 	"""Lint all checkeable files."""
 
-	lint_javascript()
 	lint_python()
-	# lint_css()
-	# lint_images()
-	# lint_files()
-	# lint_setup()
-	# lint_ini()
-	# lint_git()
+	lint_javascript()
 	lint_rst()
 	lint_html()
+	lint_files()
 
 
 def lint_javascript():
 	"""Lint all javascript files."""
 	lint_jscs()
 	# lint_jshint()
+	# jslint
+
+
+def lint_javascript_jscs():
+	"""Run jscs (http://jscs.info) over all javascript.
+
+	Run "jscs <file>" over all .js files."""
+
+	pass
 
 
 def lint_html():
 	# https://github.com/deezer/html-linter
 	# http://www.html-tidy.org
+	# html-linter in pip
 	pass
 
 
@@ -96,14 +101,6 @@ def lint_images():
 	# lint_jpeg()
 	# lint_gif()
 	# lint_png()
-	pass
-
-
-def lint_jscs():
-	"""Run jscs (http://jscs.info) over all javascript.
-
-	Run "jscs <file>" over all .js files."""
-
 	pass
 
 
@@ -119,23 +116,42 @@ def lint_rst():
 def lint_python():
 	"""Lint all python files for automatically detectable errors."""
 
-	lint_pylint()
-	lint_pcodestyle()
-	lint_pydocstyle()
-	# vale prose
-	# the other prose checker
+	lint_python_pylint()
+	lint_python_pycodestyle()
+	lint_python_pydocstyle()
+	# vale or other prose checker over comments
 
 
-def lint_pylint():
-	pass
+def lint_python_pylint():
+	"""Run pylint over all python source files."""
+
+	try:
+		local('pylint shareclip')
+	except:
+		pass
 
 
-def lint_pycodestyle():
-	pass
+def lint_python_pycodestyle():
+	"""Run pycodestyle (ex pep8) over all python source files."""
+
+	local('pycodestyle shareclip')
 
 
-def lint_pydocstyle():
-	pass
+def lint_python_pydocstyle():
+	"""Run pydocstyle (ex pep257) over all python source files."""
+
+	local('pydocstyle shareclip')
+
+
+def lint_files():
+	lint_files_rmlint()
+
+
+def lint_files_rmlint():
+	"""Run rmlint filesystem checker over all files."""
+
+	local('rmlint .')
+
 
 
 def thirdparty():

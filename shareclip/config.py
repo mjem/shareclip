@@ -18,41 +18,45 @@ import os
 from pathlib import Path
 
 # Software release version
-version = '0.1'
+VERSION = '0.1'
+
+# Software homepage
+HOMEPAGE = 'http://github.com/mjem/shareclip'
 
 # Standard TCP port for server to listen on or client to connect to
-port = 8080
+PORT = 8080
 
 # Web server URL prefix for all addresses
-prefix = ''
+PREFIX = ''
 
 # Installed directory where we find templates/ and static/
-project_root = Path(__file__).parent
+PROJECT_ROOT = Path(__file__).parent
 
 # Static files for web server
-static_root = project_root.joinpath('static')
+STATIC_ROOT = PROJECT_ROOT.joinpath('static')
 
 # Root of config directorys
 # config_file = Path(os.environ.get('XDG_CONFIG_HOME', '~/.config')).expanduser().
 # joinpath('shareclip', 'config')
 
 # Where to store our statefile and log and pid
-data_dir = Path(os.environ.get('XDG_DATA_HOME', '~/.local/share')).expanduser().joinpath('shareclip')
+DATA_DIR = Path(os.environ.get(
+	'XDG_DATA_HOME', '~/.local/share')).expanduser().joinpath('shareclip')
 
 # Name of statefile used to store slot contents between invocations of the server
-statefile = data_dir.joinpath('state')
+STATEFILE = DATA_DIR.joinpath('state')
 
 # Number of undo slot to retain
-undo_queue_length = 100
+UNDO_QUEUE_LENGTH = 100
 
 # Filename for log file or None for terminal
-log_file = None  # data_dir.joinpath('log')
+LOG_FILE = None  # data_dir.joinpath('log')
 
 # Base name for daily rotating log files
-rotating_log_file = None
+ROTATING_LOG_FILE = None
 
 # Switch on extra developer info in web interface and console log
-debug = False
+DEBUG = False
 
 # Log at info level
 #  Server start - time

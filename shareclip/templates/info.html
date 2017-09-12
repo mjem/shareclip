@@ -12,13 +12,11 @@
 			<h1>Share clipboard info</h1>
 
 			<h2>Program</h2>
-			<p>Homepage: {{homepage}}</p>
+			<p>Homepage: <a href='{{homepage}}'>{{homepage}}</a></p>
 			<p>Version: {{version}}</p>
 
 			<h2>Clients</h2>
-			<ul>
-				{%for c in clients%}<li>{{c}}</li>{%endfor%}
-			</ul>
+			<p>There are {{clients|length}} active clients</p>
 
 			<h2>State</h2>
 			<p>{{messages}} messages</p>

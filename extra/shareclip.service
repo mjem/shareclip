@@ -1,0 +1,19 @@
+# Copy this file to /etc/systemd/user or ~/.config/systemd/user
+# Run 'systemctl daemon-reload' to notice it (with --user for ~)
+# Then 'systemctl cat shareclip' to check it got noticed
+# Then 'systemctl start' to start
+
+[Unit]
+Description=Network shared clipboard
+# Requires=network.target
+# After=network.target
+
+[Service]
+Type=simple
+# User=pi
+ExecStart=/home/od/home/shareclip.sh
+
+[Install]
+WantedBy=multi-user.target
+
+

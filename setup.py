@@ -2,9 +2,11 @@
 
 from setuptools import setup, find_packages
 
+from shareclip import config
+
 setup(
     name='shareclip',
-    version='0.1',
+    version=config.version,
     packages=find_packages(),
 
     # scripts=['shareclip.py'],
@@ -13,11 +15,11 @@ setup(
     # Project uses reStructuredText, so ensure that the docutils get
     # installed or upgraded on the target machine
     install_requires=[
-		'docutils>=0.3',
+		# 'docutils>=0.3',
 		'aiohttp>=2.2.5',
 		'aiohttp-jinja2>=0.13.0',
-		'Fabric3>=1.13.1',
-		'Sphinx>=1.6.3',
+		# 'Fabric3>=1.13.1',
+		# 'Sphinx>=1.6.3',
 	],
 
     package_data={
@@ -30,16 +32,26 @@ setup(
         # 'hello': ['*.msg'],
     },
 
+	# not sure if these are used
 	data_files=[
-		('.', [
+		('', [
+			'README.rst',
 			'LICENSE.rst',
 			'ChangeLog.rst',
 			'requirements.txt',
-		]),
-		('docs', [
+			'requirements-dev.txt',
 			'docs/conf.py',
 			'docs/Makefile',
+			'docs/*.png',
+			'docs/*.rst',
+			'extra/shareclip.service',
 		]),
+		# does not appear to be used
+		# ('docs', [
+			# 'main.png',
+			# 'conf.py',
+			# 'Makefile',
+		# ]),
 	],
 
     # metadata for upload to PyPI
@@ -48,7 +60,7 @@ setup(
     description='Web server to share multiple clipboard entries',
     license='GPLv3',
     keywords='web share clipboard messages vuejs websockets',
-    url='https://github.com/mjem/shareclip',  # project home page, if any
+    url=config.homepage,
 
 	classifiers=[
 		'Intended Audience :: End Users/Desktop',

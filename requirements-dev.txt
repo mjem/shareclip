@@ -1,9 +1,11 @@
-pandoc
+# python modules
 docutils
 pylint
 pydocstyle
 pycodestyle
-emacs
-git
-linters
 aiohttp_debugtoolbar
+Fabric3
+sphinx
+# non-python
+#  pandoc
+#  rmlint

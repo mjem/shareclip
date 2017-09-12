@@ -24,8 +24,8 @@ logger = logging.getLogger('server')
 # See https://pastebin.com/xDSACmdV for a template for writing server as a class
 
 # class WebSocket():
-	# web.json_response
-	# pass
+# web.json_response
+# pass
 
 
 def datetime_to_iso8601(dt):
@@ -46,9 +46,7 @@ async def render_index(request):
 
 	app = request.app
 
-	# return web.Response(text='Hello everybody')
-	return {'initial_text': app['value'],
-			'ws_url': app.router['ws'].url_for(),
+	return {'ws_url': app.router['ws'].url_for(),
 			'all_url': app.router['all'].url_for(),
 			'info_url': app.router['info'].url_for(),
 			'undo_url': app.router['undo'].url_for(),
@@ -70,12 +68,12 @@ async def render_info(request):
 	app = request.app
 	logger.debug('render info clients ' + str(app['clients']))
 	return {
-		'homepage': 'http://github.com/mjem/shareclip',
-		'version': config.version,
+		'homepage': config.HOMEPAGE,
+		'version': config.VERSION,
 		'clients': app['hosts'].values(),
 		'messages': len(app['statefile'].slots),
 		'undos': len(app['statefile'].undos),
-		}
+	}
 
 
 async def render_undo(request):
@@ -129,6 +127,8 @@ def broadcast(app, message):
 def welcome_client(app, ws):
 	"""Welcome a new client by sending all current slots to them."""
 
+	logger.debug('Welcoming {ws} with {s} initial messages'.format(
+		ws=id(ws), s=len(app['statefile'].slots)))
 	for s in app['statefile'].slots:
 		message = {'type': 'new_slot'}
 		message.update(s)
@@ -254,7 +254,7 @@ def serve(port, prefix, statefile, debug=True):
 	app.router.add_get(prefix + '/ws', websocket_handler, name='ws')
 	app.router.add_get(prefix + '/undo', render_undo, name='undo')
 	app.router.add_static(prefix + '/static',
-						  config.static_root,
+						  config.STATIC_ROOT,
 						  show_index=True,
 						  follow_symlinks=True,
 						  name='static')

@@ -72,17 +72,7 @@
 				<button class="btn" id="nickname_clear">Clear</button>
 			</div>
 
-			<table class="table table-bordered table-hover table-sm" id="slot-table">
-				<thead class="thead-default">
-					<tr>
-						<th>Message</th>
-						<th>Sender</th>
-						<th>Control</th>
-					</tr>
-				</thead>
-				<tbody id="slots">
-				</tbody>
-			</table>
+			<div id="slot-table-placeholder"></div>
 
 			<div class="misc-buttons">
 				<button class="btn btn-secondary" id="undo">Undo delete</button>
@@ -93,7 +83,6 @@
 			</div>
 
 			<script>
-			var initial_text = "{{initial_text}}";
 			var ws_url = window.location.host + "{{ws_url}}";
 			var undo_url = "{{undo_url}}";
 			</script>

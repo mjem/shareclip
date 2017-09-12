@@ -9,6 +9,7 @@ from shareclip.statefile import Statefile
 
 logger = logging.getLogger('main')
 
+
 def read_config_file(config_file):
 	"""Process a .conf configuration file and override config settings."""
 	pass
@@ -25,8 +26,8 @@ def main():
 									 usage='%(prog)s [options]',
 									 description=None)
 	# parser.add_argument('--config', '-c',
-						# default=config.config_file,
-						# help='Specify config file')
+	# default=config.config_file,
+	# help='Specify config file')
 
 	# config_args, remainder = parser.parse_known_args()
 
@@ -38,13 +39,13 @@ def main():
 						help='Run web server')
 	parser.add_argument('--port', '-p',
 						type=int,
-						default=config.port,
+						default=config.PORT,
 						help='Server listen port')
 	parser.add_argument('--prefix',
-						default=config.prefix,
+						default=config.PREFIX,
 						help='URL prefix')
 	parser.add_argument('--statefile',
-						default=config.statefile,
+						default=config.STATEFILE,
 						help='Chose alternative statefile location')
 	parser.add_argument('--clear-statefile',
 						action='store_true',
@@ -57,7 +58,7 @@ def main():
 						help='Show undo queue')
 	parser.add_argument('--debug',
 						action='store_true',
-						default=config.debug,
+						default=config.DEBUG,
 						help='Switch on additional debug messages to logfile and server results')
 	parser.add_argument('--log',
 						help='Location of log file')
@@ -82,7 +83,7 @@ def main():
 		parser.exit()
 
 	if args.version:
-		print(config.version)
+		print(config.VERSION)
 		parser.exit()
 
 	statefile = Statefile(args.statefile)
@@ -110,6 +111,7 @@ def main():
 
 	if not done_something:
 		parser.error('No actions specified')
+
 
 if __name__ == '__main__':
 	main()

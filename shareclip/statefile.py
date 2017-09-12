@@ -14,6 +14,7 @@ logger = logging.getLogger('statefile')
 # To use it we'd need a function to convert one of these to a json message
 # Slot = namedtuple('Slot', 'uid timestamp text clipboard nickname source')
 
+
 class Statefile():
 	"""Handle the persistent state file."""
 
@@ -55,13 +56,14 @@ class Statefile():
 	def save(self):
 		"""Save ourselves to statefile."""
 
-		json.dump({
-			'version': Statefile.VERSION,
-			'slots': self.slots,
-			'undos': self.undos,
-		},
-				  self.filename.open('w'),
-				  indent=2)
+		json.dump(
+			{
+				'version': Statefile.VERSION,
+				'slots': self.slots,
+				'undos': self.undos,
+			},
+			self.filename.open('w'),
+			indent=2)
 		logger.info('Saved state to {s}'.format(s=self.filename))
 
 	def delete(self):
@@ -95,12 +97,11 @@ class Statefile():
 				self.undos.insert(0, s)
 				logging.info('Removed slot {uid} remaining {slots} undos {undos}'.format(
 					uid=uid, slots=len(self.slots), undos=len(self.undos)))
-				if len(self.undos) > config.undo_queue_length:
-					self.undos = self.undos[:config.undo_queue_length]
+				if len(self.undos) > config.UNDO_QUEUE_LENGTH:
+					self.undos = self.undos[:config.UNDO_QUEUE_LENGTH]
 					logging.info('Trimmed undo queue length to {max}'.format(
-						max=config.undo_queue_length))
+						max=config.UNDO_QUEUE_LENGTH))
 
 	def empty_undo(self):
 		logging.info('Removing {u} undo slots'.format(u=len(self.undos)))
 		self.undos = []
-
