@@ -13,50 +13,12 @@ THIRDPARTY = pathlib.Path('thirdparty')
 BOOTSTRAP_VERSION = '4.0.0-beta'
 STATIC = pathlib.Path('shareclip', 'static')
 ACTIVATE = pathlib.Path('activate')
+DOCS = pathlib.Path('docs')
 
 def dist():
 	"""Create a distributable archive file."""
 
-	pass
-
-
-# def clean():
-	# """Restore directory to original download state."""
-	# zap_list = []
-	# for zap_ext in ('__pycache__', '*.pyc', '*.pyo'):
-		# for zap_item in Path('.').rglob(zap_ext):
-			# if str(zap_item).startswith(str(ENV) + SEP):
-				# continue
-			# print('unlink ' + str(zap_item))
-			# zap_list.append(zap_item)
-	# for zap_item in zap_list:
-		# if zap_item.exists():
-			# if zap_item.is_file():
-				# print('unlink {i}'.format(i=zap_item))
-				# zap_item.unlink()
-			# else:
-				# print('rmtree {i}'.format(i=zap_item))
-				# shutil.rmtree(zap_item)
-	# generated html documentation
-	# test results
-	# activate file
-	# setup temporary files
-	# if ACTIVATE.exists():
-		# ACTIVATE.unlink()
-# def veryclean():
-	# """Remove all generated files, even 3rd party files checked into source code control.
-	# Run 'fab thirdparty env' afterwards to restore useable state.
-	# """
-	# clean()
-	# clean_thirdparty()
-	# clean_env()
-	# Path('LICENSE.rst').unlink()
-	# STATIC.joinpath('bootstrap.min.js').unlink()
-	# STATIC.joinpath('bootstrap.min.css').unlink()
-# def clean_env():
-	# """Delete existing env/ directory."""
-	# if ENV.exists():
-		# shutil.rmtree(ENV)
+	local('python setup.py sdist')
 
 
 def test():
@@ -72,45 +34,68 @@ def lint():
 	lint_javascript()
 	lint_rst()
 	lint_html()
-	lint_files()
+	# lint_images()
+	# lint_prose()
+	# lint_files()
 
 
 def lint_javascript():
 	"""Lint all javascript files."""
-	lint_jscs()
-	# lint_jshint()
-	# jslint
+	lint_javascript_eslint()
+	lint_javascript_jshint()
 
 
 def lint_javascript_jscs():
-	"""Run jscs (http://jscs.info) over all javascript.
+	"""Run jshint via pip-based wrapper"""
 
-	Run "jscs <file>" over all .js files."""
+	local('jshint_scanner.py shareclip/static/index.js')
 
-	pass
+
+def lint_javascript_eslint():
+	"""Run eslint tool (merged from jscs)."""
+
+	local('eslint shareclip/static/index.js')
 
 
 def lint_html():
-	# https://github.com/deezer/html-linter
 	# http://www.html-tidy.org
-	# html-linter in pip
-	pass
+	lint_html_tidy()
+	lint_html_html_lint()
 
 
-def lint_images():
+def lint_html_tidy():
+	"""Run tidy from http://tidy.sourceforge.net or http://www.html-tidy.org"""
+
+	local('tidy shareclip/templates/*.html')
+
+
+def lint_html_html_lint():
+	"""Run html_lint.py tool from https://github.com/sk-/html-linter"""
+	# or deezer
+
+	local('html_lint.py --disable=tabs shareclip/templates/index.html')
+
+
+# def lint_images():
 	# lint_jpeg()
 	# lint_gif()
 	# lint_png()
-	pass
+	# pass
 
 
 def lint_rst():
 	"""Check all reStructuredText files for errors."""
 
 	# https://github.com/twolfson/restructuredtext-lint
-	# pandoc
-	# rst2html5.py
-	pass
+
+	# doesn't give much useful info
+	local('restructuredtext-lint README.rst')
+
+	# just to report problems
+	local('pandoc README.rst -o README.html')
+
+	# just to report problems
+	local('rst2html5.py README.rst README.html')
 
 
 def lint_python():
@@ -125,10 +110,7 @@ def lint_python():
 def lint_python_pylint():
 	"""Run pylint over all python source files."""
 
-	try:
-		local('pylint shareclip')
-	except:
-		pass
+	local('pylint shareclip')
 
 
 def lint_python_pycodestyle():
@@ -144,14 +126,45 @@ def lint_python_pydocstyle():
 
 
 def lint_files():
+	"""Run generic filesystem linters."""
+
 	lint_files_rmlint()
+	# lint_files_fslint()
 
 
 def lint_files_rmlint():
 	"""Run rmlint filesystem checker over all files."""
 
-	local('rmlint .')
+	local('rmlint shareclip')
 
+
+def lint_prose():
+	"""Run spell- and grammar-checkers over the documentation and code comments."""
+
+	lint_prose_vale()
+	lint_prose_languagetool()
+	lint_prose_proselint()
+
+
+def lint_prose_vale():
+	"""Run vale prose lint tool from https://valelint.github.io."""
+
+	# supposed to have support for source code checking, do .py and .js too?
+	local('vale README.rst')
+
+
+def lint_prose_languagetool():
+	"""Run languagetool from https://languagetool.org."""
+
+	# no built in support for rst or source code handling
+	local('languagetool README.rst')
+
+
+def lint_prose_proselint():
+	"""Run proselint tool from http://proselint.com."""
+
+	# Does not appear to give useful results
+	local('languagetool README.rst shareclip')
 
 
 def thirdparty():
@@ -212,8 +225,7 @@ def thirdparty_unpack():
 	"""Take files from the 3rdparty/ directory and transfer the bits we need to static/.
 
 	These files are checked into source code management, to ensure the repo is self contained.
-	3rd party licenses must allow this.
-	"""
+	3rd party licenses must allow this."""
 
 	os.chdir(THIRDPARTY)
 	local('unzip -u bootstrap-{v}-dist.zip'.format(v=BOOTSTRAP_VERSION))
@@ -225,11 +237,27 @@ def thirdparty_unpack():
 
 def doc():
 	"""Generate html and pdf versions of RST documents."""
+
+	doc_screenshots()
+	doc_thumbnails()
 	doc_readme()
-	doc_docs()
+	doc_sphinx()
 
 
-def doc_docs():
+def doc_screenshots():
+	"""Use autotests to create screenshots for readme and sphinx docs."""
+
+	pass
+
+
+def doc_thumbnails():
+	"""Process full sized screenshots to thumbnails."""
+
+	os.chdir(DOCS)
+	local('convert main.png -resize 500 main-sm.png')
+
+
+def doc_sphinx():
 	"""Generate sphinx documents from docs/ directory."""
 
 	local('sphinx-build -b html docs html')
@@ -238,7 +266,8 @@ def doc_docs():
 def doc_readme():
 	"""Create (and test format) README.html from README.rst."""
 
-	local('pandoc -r rst -w html -o README.html README.rst')
+	# local('pandoc -r rst -w html -o README.html README.rst')
+	local('rst2html5.py README.rst README.html')
 
 def activate():
 	"""Create an `activate` file that can be sourced to set up the project ready to run."""

@@ -1,18 +1,18 @@
-"use strict";
+'use strict';
 
 // make ajax call
 function get(url) {
-   return new Promise((resolve, reject) => {
-       const req = new XMLHttpRequest();
-       req.open('GET', url);
-       req.onload = () => req.status === 200 ? resolve(req.response) : reject(Error(req.statusText));
-       req.onerror = (e) => reject(Error(`Network Error: ${e}`));
-       req.send();
-   });
+	return new Promise((resolve, reject) => {
+		const req = new XMLHttpRequest();
+		req.open('GET', url);
+		req.onload = () => req.status === 200 ? resolve(req.response) : reject(Error(req.statusText));
+		req.onerror = (e) => reject(Error(`Network Error: ${e}`));
+		req.send();
+	});
 }
 
 // websocket and message queue
-var ws;
+var ws = null;
 // var ws_ready = false;
 // var ws_outbox = []
 
@@ -32,7 +32,7 @@ function create_websocket() {
 			// clear any buffered messages and mark the socket as available for direct use
 			// ws_ready = true;
 			// for(var i=0; i<ws_outbox.length; i++) {
-				// websocket_send(ws_outbox[i]);
+			// websocket_send(ws_outbox[i]);
 			// }
 			// ws_outbox = [];
 			console.log('pre set table');
@@ -64,35 +64,35 @@ function create_websocket() {
 				'</div>';
 			console.log('WebSocket is closed');
 		};
-    }
+	}
 
 	else {
 		alert('WebSocket not supported by your browser');
-    }
+	}
 }
 
 // send a message back to our server over the websocket
 function websocket_send(message) {
 	// if (ws_ready) {
-		var encoded = JSON.stringify(message);
-		console.log('Sending message ' + encoded);
-		ws.send(encoded);
+	var encoded = JSON.stringify(message);
+	console.log('Sending message ' + encoded);
+	ws.send(encoded);
 	// }
 
 	// else {
-		// ws_outbox.push(message);
+	// ws_outbox.push(message);
 	// }
 }
 
 // right pad with `filler` to `length` chars
 String.prototype.rpad = function(filler, length) {
-    var str = this;
-    while (str.length < length) {
-        str += filler;
+	var str = this;
+	while (str.length < length) {
+		str += filler;
 	}
 
-    return str;
-}
+	return str;
+};
 
 // pretty print a Date
 function show_time(time) {
@@ -108,7 +108,7 @@ function show_time(time) {
 function websocket_recv(msg) {
 	console.log('recv ' + JSON.stringify(msg));
 	if (msg.type == 'new_slot') {
-		var new_slot = document.createElement('tr')
+		var new_slot = document.createElement('tr');
 		new_slot.dataset.uid = msg.uid;
 		new_slot.dataset.text = msg.text;
 		new_slot.dataset.clipboard = msg.clipboard;
@@ -164,12 +164,12 @@ function info_modal(uid) {
 	for(var i=0; i<slots.length; i++) {
 		var slot = slots[i];
 		if (uid == slot.dataset.uid) {
-			console.log('open info ' + slot + ' text '  + slot.dataset.text);
+			console.log('open info ' + slot + ' text '	+ slot.dataset.text);
 			// var i  = docid('info_modal');
 			// console.log(i);
 			// i.modal();
 			docid('info_modal_body').innerHTML = 'sent at ' + slot.dataset.timestamp;
-			$('#info_modal').modal();
+			docid('#info_modal').modal();
 		}
 	}
 }
@@ -178,7 +178,7 @@ function info_modal(uid) {
 function delete_click(uid) {
 	console.log('Sending request to delete slot ' + uid);
 	websocket_send({type: 'delete',
-					uid: uid});
+		uid: uid});
 }
 
 // handle message zapping a slot
@@ -213,7 +213,7 @@ function post_click() {
 
 // Handler for delete all confirmation dialog
 var delete_all_modal = new RModal(
-	docid('delete_all_modal'),
+	docid('delete_all_modal')
 );
 
 // handle click to delete all button
@@ -235,7 +235,7 @@ function delete_all_cancel(event) {
 }
 
 var empty_undo_modal = new RModal(
-	docid('empty_undo_modal'),
+	docid('empty_undo_modal')
 );
 
 // handler for changes to nickname
@@ -251,7 +251,7 @@ function nickname_init() {
 	docid('nickname_clear').onclick = function() {
 		docid('nickname').value = '';
 		nickname_change();
-	}
+	};
 	if (localStorage.hasOwnProperty('nickname')) {
 		docid('nickname').value = localStorage.getItem('nickname');
 	}
@@ -260,14 +260,14 @@ function nickname_init() {
 
 // insert `string` to the users clipboard
 function string_to_clipboard(string) {
-    function handler (event){
-        event.clipboardData.setData('text/plain', string);
-        event.preventDefault();
-        document.removeEventListener('copy', handler, true);
-    }
+	function handler (event){
+		event.clipboardData.setData('text/plain', string);
+		event.preventDefault();
+		document.removeEventListener('copy', handler, true);
+	}
 
-    document.addEventListener('copy', handler, true);
-    document.execCommand('copy');
+	document.addEventListener('copy', handler, true);
+	document.execCommand('copy');
 }
 
 // empty the new post box
@@ -292,7 +292,7 @@ function undo_click() {
 		})
 		.catch((err) => {
 			console.log('ajax undo failed');
-		})
+		});
 }
 
 // page startup
@@ -317,25 +317,25 @@ document.addEventListener('DOMContentLoaded', function() {
 		websocket_send({
 			type: 'delete_all',
 		});
-	}
+	};
 
 	docid('delete_all_modal_cancel').onclick = function(event) {
 		event.preventDefault();
 		delete_all_modal.close();
-	}
+	};
 
 	docid('empty_undo').onclick = function(event) {
 		event.preventDefault();
 		empty_undo_modal.open();
-	}
+	};
 	docid('empty_undo_modal_confirm').onclick = function(event) {
 		event.preventDefault();
 		empty_undo_modal.close();
 		websocket_send({type: 'empty_undo'});
-	}
+	};
 	docid('empty_undo_modal_cancel').onclick = function(event) {
 		event.preventDefault();
 		empty_undo_modal.close();
-	}
+	};
 
 }, false);

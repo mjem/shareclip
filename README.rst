@@ -1,6 +1,8 @@
 Shareclip README
 ================
 
+:Description: Web-based shared clipboard server
+
 Introduction
 ------------
 
@@ -9,7 +11,7 @@ Shareclip is a web server for sharing entries between users, typically on a loca
 Screenshots
 -----------
 
-.. image:: docs/main.png
+.. image:: docs/main-sm.png
    :width: 500px
    :alt: Screenshot of main interface
    :target: docs/main.png
@@ -17,21 +19,19 @@ Screenshots
 Features
 --------
 
-- Many clients can simultaneously connect to the shared clipboard server
-- New posts or deletions are instantly propagated to all clients
-- Post plain text or URL messages
+- Post as many messages as you like
+- Messages can be plain text or a URL
+- Everyone can post and everyone can see the same list of messages
+- New posts or deletions are instantly propagated to all clients via a Websocket
 - Messages are stored with a timestamp and nickname of the poster
-- Posts consisting of URLs are detected and displayed as HTML links
 - Copy a message to the user's desktop clipboard with a button
-- Option to open all messages as a simple webpage
 - Server state is stored in a persistent statefile between runs
 - Delete and undo delete messages
-- Uses Websocket technology to push updates to browsers
 
 Quick start
 -----------
 
-This section only applies to computers running Linux with a fairly up-to-date installation.
+This section only applies to computers running Linux with an aup-to-date installation.
 
 1. Make sure you have :code:`python3` installed using your distribution package manager or other method.
 
@@ -56,7 +56,7 @@ This section only applies to computers running Linux with a fairly up-to-date in
 
     bin/shareclip --serve
 
-5. Open a web browser to http://localhost:8080
+5. Open a local web browser to http://localhost:8080 . On other machines use http://<ip>:8080
 
 Installation
 ------------
@@ -66,7 +66,7 @@ The project includes a :code:`setup.py` file to permanently install it in your p
 Commands
 --------
 
-The project has a single command line entry command. Run :code:`shareclip --help` to see available options.
+Run :code:`shareclip --help` to see available options including changing the port and URL prefix.
 
 Statefile
 ---------
@@ -87,15 +87,15 @@ Use the :code:`--port` and :code:`--prefix` options to control the URL to access
 Third party libraries
 ---------------------
 
-https://daneden.github.io/animate.css/
-https://github.com/daneden/animate.css
+This project includes code from:
 
-http://rmodal.js.org/
-https://github.com/zewish/rmodal.js
+- https://daneden.github.io/animate.css
+- http://rmodal.js.org
+- http://getbootstrap.com
 
-bootstrap 4
+Icon from:
 
-the icon
+- https://openclipart.org/detail/212115/clipboard
 
 License
 -------

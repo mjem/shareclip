@@ -5,6 +5,7 @@ import argparse
 
 from shareclip import server
 from shareclip import config
+from shareclip import log
 from shareclip.statefile import Statefile
 
 logger = logging.getLogger('main')
@@ -17,10 +18,6 @@ def read_config_file(config_file):
 
 def main():
 	"""Command line entry point."""
-
-	logging.basicConfig(level=logging.DEBUG,
-						handlers=[logging.StreamHandler()])
-
 	parser = argparse.ArgumentParser(add_help=False,
 									 epilog=None,
 									 usage='%(prog)s [options]',
@@ -77,6 +74,8 @@ def main():
 
 	args = parser.parse_args()
 	# args = parser.parse_args(remainder)
+
+	log.init_log()
 
 	if args.help:
 		parser.print_help()
