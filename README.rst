@@ -6,27 +6,26 @@ Shareclip README
 Introduction
 ------------
 
-Shareclip is a web server for sharing entries between users, typically on a local network. Everyone accessing the site sees the same list of shared entries.
+Shareclip is a web server for sharing messages between users, typically on a local network. Everyone accessing the site sees the same list of shared entries.
 
 Screenshots
 -----------
 
 .. image:: docs/main-sm.png
-   :width: 500px
    :alt: Screenshot of main interface
    :target: docs/main.png
 
 Features
 --------
 
-- Post as many messages as you like
+- Post and share multiple messages
 - Messages can be plain text or a URL
-- Everyone can post and everyone can see the same list of messages
+- Everyone can post and everyone sees the same list of messages
 - New posts or deletions are instantly propagated to all clients via a Websocket
 - Messages are stored with a timestamp and nickname of the poster
 - Copy a message to the user's desktop clipboard with a button
 - Server state is stored in a persistent statefile between runs
-- Delete and undo delete messages
+- Delete and undo delete of messages
 
 Quick start
 -----------
@@ -71,7 +70,7 @@ Run :code:`shareclip --help` to see available options including changing the por
 Statefile
 ---------
 
-By default when the server shuts down the state is recorded to :code:`~/.local/share/shareclip/state`. The same file is automatically read on startup. Use the :code:`--clear-state` option to permanently delete any existing statefile on startup.
+By default when the server shuts down the state is recorded to :code:`~/.local/share/shareclip/state`. The same file is automatically read on startup. Use the :code:`--clear-state` option to delete any existing statefile on startup.
 
 Use the :code:`--statefile` option to chose a different statefile.
 

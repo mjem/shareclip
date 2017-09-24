@@ -10,7 +10,7 @@ setup(
     packages=find_packages(),
 
     # scripts=['shareclip.py'],
-	entry_points = {'console_scripts': ['shareclip = shareclip.cmd:main'] },
+	entry_points = {'console_scripts': ['shareclip = shareclip.main:main'] },
 
     # Project uses reStructuredText, so ensure that the docutils get
     # installed or upgraded on the target machine

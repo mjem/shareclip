@@ -93,11 +93,36 @@ def get_urls(server):
 
 
 def get_browser(server):
+	"""Start up the browser and wait for initialisation and first response.
+
+	We don't even see a blank messages table until the websocket has been started
+	and first response received."""
 	browser = webdriver.Firefox()
+	browser.set_window_size(900, 700)
 	browser.get(server)
-	logger.info('title is {t}'.format(t=browser.title))
-	time.sleep(10)
-	browser.quit()
+	logger.info('Title is {t}'.format(t=browser.title))
+	while True:
+		page_state = browser.execute_script('return document.readyState;')
+		# slot table is drawn on websocket onopen handler
+		slot_table = browser.find_element_by_id('slot-table')
+		logging.debug('page state ' + str(page_state) + ' slot table {st}'.format(st=slot_table))
+		time.sleep(1)
+		if slot_table is not None:
+			break
+
+	return browser
+
+
+def screenshots(browser):
+	"""Simulate a brief usage session, recording screenshots"""
+	browser.get_screenshot_as_file('01 - startup.png')
+	post = browser.find_element_by_id('new-message')
+	post.send_keys('Hello I am message')
+	nick = browser.find_element_by_id('nickname')
+	nick.send_keys('benji')
+	browser.get_screenshot_as_file('02 - prepost.png')
+	browser.find_element_by_id('post').click()
+	browser.get_screenshot_as_file('03 - firstpost.png')
 
 
 def test_startup():
@@ -109,7 +134,24 @@ def test_startup():
 def test_basic():
 	"""Start local server and retrieve URLs."""
 	run_server(config.PORT)
-	get_urls('http://localhost:{port}'.format(port=port))
+	get_urls('http://localhost:{port}'.format(port=config.PORT))
+
+
+def test_browser():
+	"""Start local server and open main page."""
+	run_server(config.PORT)
+	browser = get_browser('http://localhost:{port}'.format(port=config.PORT))
+	browser.quit()
+	stop_server()
+
+
+def test_screenshots():
+	"""Clear state file, start local server, browse, post some messages, take screenshots."""
+	run_server(config.PORT)
+	browser = get_browser('http://localhost:{port}'.format(port=config.PORT))
+	screenshots(browser)
+	browser.quit()
+	stop_server()
 
 
 def main():
@@ -133,12 +175,16 @@ def main():
 	parser.add_argument('--browser',
 						action='store_true',
 						help='Test with synthetic browser')
+	parser.add_argument('--screenshots',
+						action='store_true',
+						help='Make screenshots')
 	args = parser.parse_args()
 
 	log.init_log()
 
 	if args.startup:
-		test_startup(args.port)
+		run_server(args.port)
+		stop_server()
 		logging.info('All done')
 		parser.exit()
 
@@ -147,7 +193,14 @@ def main():
 		args.server = 'http://localhost:{port}'.format(port=args.port)
 
 	if args.browser:
-		get_browser(args.server)
+		browser = get_browser(args.server)
+		browser.quit()
+		parser.exit()
+
+	if args.screenshots:
+		browser = get_browser(args.server)
+		screenshots(browser)
+		browser.quit()
 		parser.exit()
 
 	get_urls(args.server)

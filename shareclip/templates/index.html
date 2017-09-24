@@ -13,6 +13,25 @@
 	<body>
 		<div class="container">
 
+			<div id="info-modal" class="modal">
+				<div class="modal-dialog animated">
+					<div class="modal-content">
+						<form class="form-horizontal" method="get">
+							<div class="modal-header">
+								<strong>Message infomation</strong>
+							</div>
+
+							<div class="modal-body" id="info-modal-body">
+							</div>
+
+							<div class="modal-footer">
+								<button class="btn btn-primary" id="info-modal-close">Close</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
 			<div id="delete_all_modal" class="modal">
 				<div class="modal-dialog animated">
 					<div class="modal-content">
@@ -58,8 +77,8 @@
 			<h1>Share clipboard</h1>
 
 			<div class="form-group row">
-				<label for="new_message" class="">Post new</label>
-				<input class="form-control" type="text" id="new_message"/>
+				<label for="new-message" class="">Post new</label>
+				<input class="form-control" type="text" id="new-message"/>
 				<div class="btn-group" role="group">
 					<button id="post_clear" class="btn">Clear</button>
 					<button id="post" class="btn btn-primary">Post</button>
@@ -69,7 +88,7 @@
 			<div class="form-group row">
 				<label for="nickname">Nickname</label>
 				<input class="form-control" type="text" id="nickname"/>
-				<button class="btn" id="nickname_clear">Clear</button>
+				<button class="btn" id="nickname-clear">Clear</button>
 			</div>
 
 			<div id="slot-table-placeholder"></div>
