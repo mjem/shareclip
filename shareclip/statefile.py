@@ -56,6 +56,11 @@ class Statefile():
 	def save(self):
 		"""Save ourselves to statefile."""
 
+		statedir = self.filename.parent
+		if not statedir.exists():
+			logger.info('Creating dir {s}'.format(s=statedir))
+			statedir.mkdir()
+
 		json.dump(
 			{
 				'version': Statefile.VERSION,

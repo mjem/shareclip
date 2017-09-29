@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import logging
 import argparse
 import subprocess
@@ -7,6 +8,7 @@ import shlex
 import urllib.request
 import atexit
 import time
+import select
 
 from selenium import webdriver
 
@@ -19,6 +21,7 @@ sub = None
 
 
 def stop_server():
+	"""Halt the asynchronous server subprocess."""
 	global sub
 	if sub is not None:
 		sub.kill()
@@ -26,12 +29,32 @@ def stop_server():
 	sub = None
 
 
-def shell(command, wait=True, stdout=True):
+def shell(command, wait=True, stdout=True, env=None):
+	"""Run a command in a subshell.
+
+	Args:
+		`command` (str): Command to execute
+		`wait` (bool): If true, don't return until command completes, and return exitcode.
+			If false, leave running and return Popen object
+		`stdout` (bool): Capture standard output
+
+	Return:
+		Exitcode or Popen object
+
+	"""
 	global sub
 
 	logger.info('Running command {cmd}'.format(cmd=command))
 	args = shlex.split(command)
+	if env is not None:
+		full_env = os.environ.copy()
+		full_env.update(env)
+
+	else:
+		full_env = None
+
 	proc = subprocess.Popen(args,
+							env=full_env,
 							stdout=subprocess.PIPE if stdout else None,
 							stderr=subprocess.PIPE if stdout else None)
 	sub = proc
@@ -47,8 +70,10 @@ def shell(command, wait=True, stdout=True):
 def run_server(port):
 	logger.info('Running server')
 	atexit.register(stop_server)
-	sub = shell('shareclip --serve --port {p}'.format(p=port), wait=False)
-	import select
+	sub = shell('shareclip --serve --port {p}'.format(p=port),
+				wait=False,
+				# env={'XDG_DATA_HOME': 'tmp'},
+				)
 	po = select.poll()
 	po.register(sub.stdout, select.POLLIN)
 	po.register(sub.stderr, select.POLLIN)
@@ -83,7 +108,6 @@ def get(url, expected_response=200):
 		else:
 			logging.info('Got HTTP exception {code} {msg} as expected'.format(
 				code=e.code, msg=e.msg))
-
 
 
 def get_urls(server):

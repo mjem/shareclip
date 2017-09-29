@@ -1,8 +1,6 @@
 Shareclip README
 ================
 
-:Description: Web-based shared clipboard server
-
 Introduction
 ------------
 
@@ -107,3 +105,4 @@ Copyright
 ---------
 
 Shareclip is copyright 2017 Mike Elson <mike.elson@gmail.com>
+a

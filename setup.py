@@ -6,7 +6,7 @@ from shareclip import config
 
 setup(
     name='shareclip',
-    version=config.version,
+    version=config.VERSION,
     packages=find_packages(),
 
     # scripts=['shareclip.py'],
@@ -33,26 +33,26 @@ setup(
     },
 
 	# not sure if these are used
-	data_files=[
-		('', [
-			'README.rst',
-			'LICENSE.rst',
-			'ChangeLog.rst',
-			'requirements.txt',
-			'requirements-dev.txt',
-			'docs/conf.py',
-			'docs/Makefile',
-			'docs/*.png',
-			'docs/*.rst',
-			'extra/shareclip.service',
-		]),
+	# data_files=[
+		# ('', [
+			# 'README.rst',
+			# 'LICENSE.rst',
+			# 'ChangeLog.rst',
+			# 'requirements.txt',
+			# 'requirements-dev.txt',
+			# 'docs/conf.py',
+			# 'docs/Makefile',
+			# 'docs/*.png',
+			# 'docs/*.rst',
+			# 'extra/shareclip.service',
+		# ]),
 		# does not appear to be used
 		# ('docs', [
 			# 'main.png',
 			# 'conf.py',
 			# 'Makefile',
 		# ]),
-	],
+	# ],
 
     # metadata for upload to PyPI
     author='Mike Elson',
@@ -60,7 +60,7 @@ setup(
     description='Web server to share multiple clipboard entries',
     license='GPLv3',
     keywords='web share clipboard messages vuejs websockets',
-    url=config.homepage,
+    url=config.HOMEPAGE,
 
 	classifiers=[
 		'Intended Audience :: End Users/Desktop',

@@ -29,7 +29,11 @@ logger = logging.getLogger('server')
 
 
 def datetime_to_iso8601(dt):
-	"""Encode a datetime in text form."""
+	"""Encode a datetime in text form.
+
+	>>> datetime_to_iso8601(datetime.datetime(2017, 6, 1, 10, 9, 8))
+	'2017-06-01T10:09:08'
+	"""
 
 	return dt.isoformat()
 
