@@ -65,7 +65,7 @@ function create_websocket() {
 				'<thead class="thead-default">' +
 				'<tr>' +
 				'<th style="width:1%">Control</th>' +
-				'<th style="width:5%">Sender</th>' +
+				'<th class="nick" style="width:5%">Sender</th>' +
 				'<th>Message</th>' +
 				'</tr>' +
 				'</thead>' +
@@ -122,7 +122,7 @@ function websocket_recv(msg) {
 			'<button class="btn btn-warning" onclick=' + "'" + 'delete_click("' + msg.uid + '"' +
 			")'" + '>Delete</button>' +
 			'</div></td>' +
-			'<td>' + msg.nickname + '</td>' +
+			'<td class="nick">' + msg.nickname + '</td>' +
 			'<td>' + msg.text + '</td>';
 		// console.log('Pushing ' + innerHTML);
 		new_slot.innerHTML = innerHTML;

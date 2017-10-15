@@ -25,12 +25,10 @@ def main():
 	# parser.add_argument('--config', '-c',
 	# default=config.config_file,
 	# help='Specify config file')
-
 	# config_args, remainder = parser.parse_known_args()
+	# Read configuration file from config_args.config and poke values back into config module
 
-	# Read configuration file from config_args.config and poke values back into config
-	# module
-
+	# web server options
 	parser.add_argument('--serve', '-s',
 						action='store_true',
 						help='Run web server')
@@ -44,6 +42,17 @@ def main():
 	parser.add_argument('--statefile',
 						default=config.STATEFILE,
 						help='Chose alternative statefile location')
+	parser.add_argument('--title',
+						help='Web page title text',
+						default=config.TITLE)
+	parser.add_argument('--hide-nickname', '--hide-nicknames',
+						action='store_true',
+						help='Hide the web tool nicknames')
+	parser.add_argument('--log',
+						help='Location of log file')
+	parser.add_argument('--rotating-log',
+						help='Root name of daily rotating log files')
+	# command line utility tool
 	parser.add_argument('--clear-statefile',
 						action='store_true',
 						help='Clear (delete) existing statefile')
@@ -53,17 +62,11 @@ def main():
 	parser.add_argument('--show-undo',
 						action='store_true',
 						help='Show undo queue')
+	# meta options
 	parser.add_argument('--debug',
 						action='store_true',
 						default=config.DEBUG,
 						help='Switch on additional debug messages to logfile and server results')
-	parser.add_argument('--log',
-						help='Location of log file')
-	parser.add_argument('--rotating-log',
-						help='Root name of daily rotating log files')
-	parser.add_argument('--title',
-						help='Web page title text',
-						default=config.TITLE)
 	parser.add_argument('--version',
 						action='store_true',
 						help='Show software version')
@@ -105,6 +108,9 @@ def main():
 		parser.exit()
 
 	config.TITLE = args.title
+
+	if args.hide_nickname:
+		config.NICKNAMES = False
 
 	if args.serve:
 		server.serve(port=args.port,

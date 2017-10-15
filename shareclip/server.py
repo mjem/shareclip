@@ -56,6 +56,7 @@ async def render_index(request):
 			'info_url': app.router['info'].url_for(),
 			'undo_url': app.router['undo'].url_for(),
 			'title': config.TITLE,
+			'nicknames': config.NICKNAMES,
 	}
 
 

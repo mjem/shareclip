@@ -66,4 +66,9 @@ DEBUG = False
 #  Message added - time, text, uid, label
 #  Message deleted - time, uid
 
+# Main web title and heading
 TITLE = 'Share clipboard'
+
+# Option to disable the nickname option
+# (not implemented very well; there should probably be a page css class doing it)
+NICKNAMES = True
