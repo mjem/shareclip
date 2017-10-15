@@ -65,3 +65,5 @@ DEBUG = False
 #  Person leaves - time and IP
 #  Message added - time, text, uid, label
 #  Message deleted - time, uid
+
+TITLE = 'Share clipboard'

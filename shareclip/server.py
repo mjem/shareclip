@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+"""HTTP webserver."""
+
 import atexit
 import uuid
-import json
 import datetime
 import binascii
 import logging
@@ -54,6 +55,7 @@ async def render_index(request):
 			'all_url': app.router['all'].url_for(),
 			'info_url': app.router['info'].url_for(),
 			'undo_url': app.router['undo'].url_for(),
+			'title': config.TITLE,
 	}
 
 
@@ -87,10 +89,10 @@ async def render_undo(request):
 	return web.Response(text='')
 
 
-def is_url(s):
+def is_url(url):
 	"""Test if `s` looks like a URL."""
 
-	return s.startswith('http://') or s.startswith('https://')
+	return url.startswith('http://') or url.startswith('https://')
 
 
 def add_slot(app, nickname, text, host):

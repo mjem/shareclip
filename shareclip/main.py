@@ -61,6 +61,9 @@ def main():
 						help='Location of log file')
 	parser.add_argument('--rotating-log',
 						help='Root name of daily rotating log files')
+	parser.add_argument('--title',
+						help='Web page title text',
+						default=config.TITLE)
 	parser.add_argument('--version',
 						action='store_true',
 						help='Show software version')
@@ -101,6 +104,8 @@ def main():
 		statefile.show_undo()
 		parser.exit()
 
+	config.TITLE = args.title
+
 	if args.serve:
 		server.serve(port=args.port,
 					 prefix=args.prefix,
@@ -110,7 +115,6 @@ def main():
 
 	if not done_something:
 		parser.error('No actions specified')
-
 
 if __name__ == '__main__':
 	main()

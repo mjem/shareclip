@@ -2,16 +2,17 @@
 
 import os
 import shutil
-from pathlib import Path
+# don't use "from pathlib import pathlib.Path" because it shows up in the -l list of tools
+import pathlib
 
 from fabric.api import local
 
-HERE = Path('.')
-ENV = Path('env')
-THIRDPARTY = Path('thirdparty')
-STATIC = Path('shareclip', 'static')
-ACTIVATE = Path('activate')
-DOCS = Path('docs')
+HERE = pathlib.Path('.')
+ENV = pathlib.Path('env')
+THIRDPARTY = pathlib.Path('thirdparty')
+STATIC = pathlib.Path('shareclip', 'static')
+ACTIVATE = pathlib.Path('activate')
+DOCS = pathlib.Path('docs')
 
 BOOTSTRAP_VERSION = '4.0.0-beta'
 RMODAL_JS_VERSION = '1.0.26'
@@ -131,7 +132,7 @@ def lint_python():
 
 def lint_python_pylint():
 	"""Run pylint over all python source files."""
-	local('pylint shareclip')
+	local('pylint --score=no shareclip')
 
 
 def lint_python_pycodestyle():
@@ -209,36 +210,16 @@ def thirdparty_download():
 
 	for d in downloads:
 		if 'file' in d:
-			filename = Path(d['file'])
+			filename = pathlib.Path(d['file'])
 
 		else:
-			filename = Path(d['url']).name
+			filename = pathlib.Path(d['url']).name
 
 		fullname = THIRDPARTY.joinpath(filename)
 
 		print('download {d} package {p} exists {e}'.format(d=d['url'], p=fullname, e=fullname.exists()))
 		if not fullname.exists():
 			local('wget {d} -O {p}'.format(d=d['url'], p=fullname))
-
-
-	# local('wget https://github.com/h5bp/html5-boilerplate/releases/download/5.3.0/html5-boilerplate_v5.3.0.zip')
-	# bootstrap_file = Path('bootstrap-{v}-dist.zip'.format(v=BOOTSTRAP_VERSION))
-	# if not bootstrap_file.exists():
-		# local('wget https://github.com/twbs/bootstrap/releases/download/v{v}/{f}'.format(
-			# v=BOOTSTRAP_VERSION, f=bootstrap_file))
-
-	# else:
-		# print('{f} exists'.format(f=bootstrap_file))
-
-	# gpl_file = pathlib.Path('gpl.md')
-	# if not gpl_file.exists():
-		# local('wget https://www.gnu.org/licenses/gpl.md')
-
-	# else:
-		# print('{f} exists'.format(f=gpl_file))
-
-	# normalise
-	# os.chdir('..')
 
 
 def _copy(src, dest):
