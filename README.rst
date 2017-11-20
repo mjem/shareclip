@@ -104,5 +104,5 @@ Released under the GPLv3_ license.
 Copyright
 ---------
 
-Shareclip is copyright 2017 Mike Elson <mike.elson@gmail.com>
-a
+Shareclip is copyright 2017 Mike Elson <mike.elson@mailbox.org>
+

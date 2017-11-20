@@ -64,9 +64,9 @@ function create_websocket() {
 				'<table class="table table-bordered table-hover table-sm" id="slot-table">' +
 				'<thead class="thead-default">' +
 				'<tr>' +
-				'<th style="width:1%">Control</th>' +
-				'<th class="nick" style="width:5%">Sender</th>' +
 				'<th>Message</th>' +
+				'<th class="nick" style="width:5%">Sender</th>' +
+				'<th style="width:1%">Control</th>' +
 				'</tr>' +
 				'</thead>' +
 				'<tbody id="slots">' +
@@ -114,16 +114,16 @@ function websocket_recv(msg) {
 		var timestamp = new Date(msg.timestamp);
 		timestamp.setMilliseconds(0);
 		new_slot.dataset.timestamp = timestamp;
-		var innerHTML = '<td><div class="btn-group" role="group">' +
+		var innerHTML = '<td>' + msg.text + '</td>' +
+			'<td class="nick">' + msg.nickname + '</td>' +
+			'<td><div class="btn-group" role="group">' +
 			'<button class="btn btn-info" onclick=' + "'" + 'open_info_modal("' + msg.uid + '"' +
 			")'>Info</button>" +
 			'<button class="btn" onclick=' + "'" + 'slot_to_clipboard("' + msg.uid + '"' +
 			")'>Copy</button>" +
 			'<button class="btn btn-warning" onclick=' + "'" + 'delete_click("' + msg.uid + '"' +
 			")'" + '>Delete</button>' +
-			'</div></td>' +
-			'<td class="nick">' + msg.nickname + '</td>' +
-			'<td>' + msg.text + '</td>';
+			'</div></td>';
 		// console.log('Pushing ' + innerHTML);
 		new_slot.innerHTML = innerHTML;
 		var slots = docid('slots');
@@ -335,8 +335,13 @@ function undo_click() {
 
 // page startup
 document.addEventListener('DOMContentLoaded', function() {
+	// prep websocket for messages
 	create_websocket();
+
+	// set up nickname box and button
 	nickname_init();
+
+	// set up post button
 	docid('post').onclick = post_click;
 	docid('post_clear').onclick = clear_message;
 	docid('new-message').addEventListener('keydown', new_post_key);
@@ -353,6 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		info_modal.close();
 	};
 
+	// set up delete_all button
 	docid('delete_all_modal_confirm').onclick = function(event) {
 		event.preventDefault();
 		delete_all_modal.close();
@@ -367,6 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		delete_all_modal.close();
 	};
 
+	// set up empty_undo button
 	docid('empty_undo').onclick = function(event) {
 		event.preventDefault();
 		empty_undo_modal.open();
@@ -381,4 +388,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		empty_undo_modal.close();
 	};
 
+	// prevent the page from being stored in the firefox bfcache.
+	// without this we get an annoying effect where a posted message re-appears
+	// if the tab is closed or unloaded and then reloaded again
+	window.onunload = function(){};
 }, false);

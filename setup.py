@@ -56,7 +56,7 @@ setup(
 
     # metadata for upload to PyPI
     author='Mike Elson',
-    author_email='mike.elson@gmail.com',
+    author_email='mike.elson@mailbox.org',
     description='Web server to share multiple clipboard entries',
     license='GPLv3',
     keywords='web share clipboard messages vuejs websockets',
