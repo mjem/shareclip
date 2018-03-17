@@ -86,7 +86,7 @@ async def render_info(request):
 async def render_undo(request):
 	"""A client requests undo delete."""
 
-	undo_delete(request.app)
+	await undo_delete(request.app)
 	return web.Response(text='')
 
 
@@ -96,7 +96,7 @@ def is_url(url):
 	return url.startswith('http://') or url.startswith('https://')
 
 
-def add_slot(app, nickname, text, host):
+async def add_slot(app, nickname, text, host):
 	"""Create a new slot in response to a client posting a new message."""
 
 	if is_url(text):
@@ -119,19 +119,19 @@ def add_slot(app, nickname, text, host):
 	# ... and message to send to all clients
 	message = {'type': 'new_slot'}
 	message.update(new_slot)
-	broadcast(app, message)
+	await broadcast(app, message)
 
 
-def broadcast(app, message):
+async def broadcast(app, message):
 	"""Take a message structure and broadcast to all active clients."""
 
 	logger.debug('Broadcasting message {m}'.format(m=message))
 	for ws in app['clients']:
 		logger.debug('    to {c}'.format(c=str(id(ws))))
-		ws.send_json(message)
+		await ws.send_json(message)
 
 
-def welcome_client(app, ws):
+async def welcome_client(app, ws):
 	"""Welcome a new client by sending all current slots to them."""
 
 	logger.debug('Welcoming {ws} with {s} initial messages'.format(
@@ -139,10 +139,10 @@ def welcome_client(app, ws):
 	for s in app['statefile'].slots:
 		message = {'type': 'new_slot'}
 		message.update(s)
-		ws.send_json(message)
+		await ws.send_json(message)
 
 
-def delete_slot(app, uid):
+async def delete_slot(app, uid):
 	"""Respond to a client request to delete a slot.
 
 	Remove it from the internal list then broadcast the change to all clients,
@@ -150,12 +150,12 @@ def delete_slot(app, uid):
 
 	state = app['statefile']
 	state.delete_slot(uid)
-	broadcast(app,
+	await broadcast(app,
 			  {'type': 'delete_slot',
 			   'uid': uid})
 
 
-def undo_delete(app):
+async def undo_delete(app):
 	"""Pop the last entry from app undos, add to current messages and inform clients."""
 
 	state = app['statefile']
@@ -166,7 +166,7 @@ def undo_delete(app):
 		state.slots.insert(0, bless)
 		message = {'type': 'new_slot'}
 		message.update(bless)
-		broadcast(app, message)
+		await broadcast(app, message)
 
 	else:
 		logger.info('No messages to undo')
@@ -195,20 +195,20 @@ async def websocket_handler(request):
 				msg_struct = msg.json()
 
 				if msg_struct['type'] == 'helo':
-					welcome_client(app, ws)
+					await welcome_client(app, ws)
 
 				elif msg_struct['type'] == 'post':
-					add_slot(app=app,
+					await add_slot(app=app,
 							 nickname=msg_struct['nickname'],
 							 text=msg_struct['message'],
 							 host=request.host)
 
 				elif msg_struct['type'] == 'delete':
-					delete_slot(app, msg_struct['uid'])
+					await delete_slot(app, msg_struct['uid'])
 
 				elif msg_struct['type'] == 'delete_all':
 					for uid in list(s['uid'] for s in state.slots):
-						delete_slot(app, uid)
+						await delete_slot(app, uid)
 
 				elif msg_struct['type'] == 'empty_undo':
 					state.empty_undo()

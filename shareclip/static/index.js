@@ -333,6 +333,10 @@ function undo_click() {
 		});
 }
 
+// convert all links to desktop friendly ones
+function demobilise() {
+}
+
 // page startup
 document.addEventListener('DOMContentLoaded', function() {
 	// prep websocket for messages
@@ -387,6 +391,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		event.preventDefault();
 		empty_undo_modal.close();
 	};
+
+	docid('demobilise').onclick = demobilise();
 
 	// prevent the page from being stored in the firefox bfcache.
 	// without this we get an annoying effect where a posted message re-appears

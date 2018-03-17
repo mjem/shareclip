@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Web shared clipboard server command line interface."""
+
 import logging
 import argparse
 
@@ -7,6 +9,7 @@ from shareclip import server
 from shareclip import config
 from shareclip import log
 from shareclip.statefile import Statefile
+from shareclip import demobilise
 
 logger = logging.getLogger('main')
 
@@ -62,6 +65,9 @@ def main():
 	parser.add_argument('--show-undo',
 						action='store_true',
 						help='Show undo queue')
+	parser.add_argument('--demobilise',
+						action='store_true',
+						help='Convert mobile friendly links to desktop friendly links')
 	# meta options
 	parser.add_argument('--debug',
 						action='store_true',
@@ -105,6 +111,10 @@ def main():
 
 	if args.show_undo:
 		statefile.show_undo()
+		parser.exit()
+
+	if args.demobilise:
+		demobilise.process_statefile(statefile)
 		parser.exit()
 
 	config.TITLE = args.title

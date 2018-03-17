@@ -53,7 +53,7 @@ class Statefile():
 		self.slots = []
 		self.undos = []
 
-	def save(self):
+	def save(self, suffix=None):
 		"""Save ourselves to statefile."""
 
 		statedir = self.filename.parent
@@ -61,15 +61,22 @@ class Statefile():
 			logger.info('Creating dir {s}'.format(s=statedir))
 			statedir.mkdir()
 
+		if suffix is None:
+			filename = self.filename
+
+		else:
+			filename = self.filename.with_suffix(suffix)
+
 		json.dump(
 			{
 				'version': Statefile.VERSION,
 				'slots': self.slots,
 				'undos': self.undos,
 			},
-			self.filename.open('w'),
+			filename.open('w'),
 			indent=2)
-		logger.info('Saved state to {s}'.format(s=self.filename))
+
+		logger.info('Saved state to {s}'.format(s=filename))
 
 	def delete(self):
 		"""Remove existing statefile."""
